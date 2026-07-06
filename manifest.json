@@ -1,13 +1,21 @@
 {
   "manifest_version": 3,
   "name": "Focus Gate for GitHub Notifications",
-  "version": "1.0.0",
-  "description": "Pauses you before the GitHub notifications page and asks if you really want to go there.",
+  "version": "1.1.0",
+  "description": "Pauses you before the GitHub notifications page, and hides timeline noise on issues and PRs so only comments remain.",
   "permissions": ["storage"],
   "content_scripts": [
     {
       "matches": ["https://github.com/notifications*"],
       "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://github.com/*/*/issues/*",
+        "https://github.com/*/*/pull/*"
+      ],
+      "js": ["quiet.js"],
       "run_at": "document_start"
     }
   ]

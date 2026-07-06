@@ -38,6 +38,19 @@ Want it stricter? Set `HOLD_SECONDS` to 10. Want to gate other pages too (e.g., 
 
 After any edit, go back to `chrome://extensions` and hit the reload icon on the extension card.
 
+## Quiet Timeline (issues & PRs)
+
+On any issue or PR page, the extension hides non-comment timeline events — labels added, assignments, force-pushes, cross-references, milestone changes, and so on — leaving only actual human discussion. This works on both GitHub's classic markup and the newer React-based issues UI.
+
+A small pill button in the bottom-right corner shows the current mode:
+
+- **"Comments only — show timeline"** (green dot) — noise is hidden; click to reveal everything (useful when you need to see when something was merged or who assigned it).
+- **"Full timeline — hide noise"** (gray dot) — everything is visible; click to hide events again.
+
+Your choice is remembered across pages and sessions.
+
+If GitHub changes its markup and hiding stops working, the selectors live at the top of `quiet.js` (`COMMENT_MARKERS` and `ITEM_SELECTORS`) — that's the only place you'd need to update.
+
 ## Notes
 
 - All data (grace window timestamp, daily check count) lives in `chrome.storage.local` on your machine.
