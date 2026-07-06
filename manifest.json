@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Focus Gate for GitHub Notifications",
+  "version": "1.0.0",
+  "description": "Pauses you before the GitHub notifications page and asks if you really want to go there.",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/notifications*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}
