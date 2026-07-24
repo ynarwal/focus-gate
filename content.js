@@ -1,19 +1,16 @@
-// Focus Gate — runs at document_start on github.com/notifications
-// Hides the page instantly, then asks you to consciously choose to enter.
-// A successful entry grants a short grace window so you can browse
-// notifications normally without re-prompting on every click.
+// Focus Gate for github.com/notifications.
 
 (() => {
-  const GRACE_MINUTES = 5;      // how long one confirmation lasts
-  const HOLD_SECONDS = 3;       // how long the button must be held
+  const GRACE_MINUTES = 5;
+  const HOLD_SECONDS = 3;
   const KEY_GRANT = "focusGateGrantUntil";
-  const KEY_COUNT = "focusGateCounts";     // { "YYYY-MM-DD": n }
+  const KEY_COUNT = "focusGateCounts";
 
   const todayKey = () => new Date().toISOString().slice(0, 10);
 
   chrome.storage.local.get([KEY_GRANT, KEY_COUNT], (data) => {
     const grantUntil = data[KEY_GRANT] || 0;
-    if (Date.now() < grantUntil) return; // inside grace window — let it load
+    if (Date.now() < grantUntil) return;
 
     const counts = data[KEY_COUNT] || {};
     const checksToday = counts[todayKey()] || 0;
@@ -21,8 +18,6 @@
     hidePage();
     whenBodyReady(() => showGate(checksToday));
   });
-
-  // ---------------------------------------------------------------
 
   function hidePage() {
     const style = document.createElement("style");
@@ -119,13 +114,11 @@
     `;
     document.body.appendChild(gate);
 
-    // "Go back to work" — leave the page
     gate.querySelector("#fg-back").addEventListener("click", () => {
       if (history.length > 1) history.back();
       else window.location.href = "https://github.com";
     });
 
-    // Hold-to-enter mechanics
     const holdBtn = gate.querySelector("#fg-hold");
     const fill = gate.querySelector("#fg-fill");
     let raf = null, startTime = null;
@@ -153,7 +146,6 @@
     ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((ev) =>
       holdBtn.addEventListener(ev, cancelHold)
     );
-    // Keyboard accessibility: hold Enter/Space
     holdBtn.addEventListener("keydown", (e) => {
       if ((e.key === "Enter" || e.key === " ") && !raf) startHold(e);
     });
@@ -171,7 +163,6 @@
       const counts = data[KEY_COUNT] || {};
       const day = todayKey();
       counts[day] = (counts[day] || 0) + 1;
-      // keep only today's entry to avoid unbounded growth
       const pruned = { [day]: counts[day] };
       chrome.storage.local.set(
         {

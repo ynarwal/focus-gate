@@ -1,40 +1,29 @@
-// Quiet Timeline — runs on GitHub issue and PR pages.
-// Hides non-comment timeline events (labels, assignments, force-pushes,
-// cross-references, milestones, etc.) so only actual human discussion
-// remains. A small floating toggle lets you reveal events when needed.
-//
-// GitHub occasionally changes its markup. If hiding stops working,
-// the selectors below are the only thing you should need to update.
+// Quiet Timeline for GitHub issues and PRs.
 
 (() => {
   const KEY_ENABLED = "quietTimelineEnabled";
   const HIDE_CLASS = "quiet-timeline-on";
 
-  // A timeline item is kept if it contains any of these (i.e., it's a comment,
-  // a review with a body, or a comment being composed):
   const COMMENT_MARKERS = [
-    ".timeline-comment",        // classic issue/PR comments
-    ".js-comment-container",    // review threads / inline discussion
-    ".review-comment",          // PR review comments
-    "[data-testid='comment-viewer-outer-box']", // new React issues UI
-    "[data-testid='markdown-body']",            // new React UI comment bodies
+    ".timeline-comment",
+    ".js-comment-container",
+    ".review-comment",
+    "[data-testid='comment-viewer-outer-box']",
+    "[data-testid='markdown-body']",
   ].join(", ");
 
-  // Containers that represent one timeline entry:
   const ITEM_SELECTORS = [
-    ".js-timeline-item",                        // classic UI
-    "[data-testid='issue-timeline-item']",      // new React issues UI
+    ".js-timeline-item",
+    "[data-testid='issue-timeline-item']",
   ];
 
   injectStyle();
 
   chrome.storage.local.get([KEY_ENABLED], (data) => {
-    const enabled = data[KEY_ENABLED] !== false; // default: on
+    const enabled = data[KEY_ENABLED] !== false;
     if (enabled) document.documentElement.classList.add(HIDE_CLASS);
     whenBodyReady(() => addToggle(enabled));
   });
-
-  // ---------------------------------------------------------------
 
   function injectStyle() {
     const style = document.createElement("style");
@@ -45,7 +34,6 @@
     style.textContent = `
       ${rules} { display: none !important; }
 
-      /* collapse the leftover connector lines between hidden items */
       html.${HIDE_CLASS} .js-timeline-item .TimelineItem--condensed {
         padding-top: 0; padding-bottom: 0;
       }
@@ -79,7 +67,6 @@
   }
 
   function addToggle(enabled) {
-    // avoid duplicates on GitHub's soft (Turbo) navigations
     if (document.getElementById("quiet-timeline-toggle")) return;
 
     const btn = document.createElement("button");
