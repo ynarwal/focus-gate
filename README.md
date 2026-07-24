@@ -23,8 +23,8 @@ A tiny Chrome extension that intercepts `github.com/notifications` and makes you
 Open `content.js` and edit the two constants at the top:
 
 ```js
-const GRACE_MINUTES = 5;   // how long one confirmation lasts
-const HOLD_SECONDS = 3;    // how long you must hold the button
+const GRACE_MINUTES = 5;   // grace window
+const HOLD_SECONDS = 3;    // hold duration
 ```
 
 Want it stricter? Set `HOLD_SECONDS` to 10. Want to gate other pages too (e.g., the GitHub homepage feed)? Add patterns to `matches` in `manifest.json`:
